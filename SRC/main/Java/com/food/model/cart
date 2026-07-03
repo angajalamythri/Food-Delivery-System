@@ -1,0 +1,85 @@
+package com.food.model;
+
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Cart {
+
+    private Map<Integer, CartItem> items =
+            new HashMap<>();
+
+    public void addItem(CartItem item) {
+
+        if(items.containsKey(item.getMenuId())) {
+
+            CartItem existing =
+                    items.get(item.getMenuId());
+
+            existing.setQuantity(
+                    existing.getQuantity()
+                    + item.getQuantity());
+
+            existing.setTotalPrice(
+                    existing.getQuantity()
+                    * existing.getPrice());
+        }
+        else {
+
+            items.put(
+                    item.getMenuId(),
+                    item);
+        }
+    }
+
+    public Collection<CartItem> getItems() {
+        return items.values();
+    }
+
+    public double getTotalAmount() {
+
+        double total = 0;
+
+        for(CartItem item :
+                items.values()) {
+
+            total += item.getTotalPrice();
+        }
+
+        return total;
+    }
+    public void updateQuantity(
+            int menuId,
+            int quantity) {
+
+        CartItem item =
+                items.get(menuId);
+
+        if(item != null) {
+
+            item.setQuantity(quantity);
+
+            item.setTotalPrice(
+                    quantity *
+                    item.getPrice());
+
+            if(quantity <= 0) {
+
+                items.remove(menuId);
+            }
+        }
+    }
+   
+    
+
+    public void removeItem(int menuId) {
+
+        items.remove(menuId);
+    }
+
+    public void clearCart() {
+
+        items.clear();
+    }
+}
