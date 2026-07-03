@@ -1,0 +1,315 @@
+<%@ page language="java"
+contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
+
+<%@ page import="java.util.List" %>
+<%@ page import="com.food.model.User" %>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Admin Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:linear-gradient(
+135deg,
+#0f172a,
+#1e293b,
+#334155);
+min-height:100vh;
+padding:30px;
+color:white;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:40px;
+}
+
+.header h1{
+font-size:38px;
+font-weight:bold;
+}
+
+.logout{
+background:#ef4444;
+color:white;
+padding:12px 20px;
+text-decoration:none;
+border-radius:10px;
+font-weight:bold;
+transition:.3s;
+}
+
+.logout:hover{
+background:#dc2626;
+}
+
+.dashboard{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+margin-bottom:40px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+padding:30px;
+border-radius:20px;
+text-align:center;
+box-shadow:
+0 8px 25px rgba(0,0,0,.3);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card h2{
+font-size:18px;
+margin-bottom:15px;
+color:#cbd5e1;
+}
+
+.value{
+font-size:42px;
+font-weight:bold;
+color:#22c55e;
+}
+
+.section-title{
+margin:30px 0 15px;
+font-size:28px;
+}
+
+.user-table{
+width:100%;
+border-collapse:collapse;
+background:rgba(255,255,255,0.08);
+border-radius:15px;
+overflow:hidden;
+box-shadow:
+0 8px 25px rgba(0,0,0,.3);
+}
+
+.user-table th{
+background:#8b5cf6;
+padding:15px;
+}
+
+.user-table td{
+padding:12px;
+text-align:center;
+border-bottom:
+1px solid rgba(255,255,255,0.1);
+}
+
+.user-table tr:hover{
+background:
+rgba(255,255,255,0.05);
+}
+
+.actions{
+margin-top:40px;
+text-align:center;
+}
+
+.btn{
+display:inline-block;
+padding:14px 24px;
+margin:10px;
+background:#8b5cf6;
+color:white;
+text-decoration:none;
+border-radius:12px;
+font-weight:bold;
+transition:.3s;
+}
+
+.btn:hover{
+background:#7c3aed;
+transform:translateY(-3px);
+}
+
+@media(max-width:768px){
+
+.header{
+flex-direction:column;
+gap:20px;
+}
+
+.header h1{
+font-size:28px;
+}
+
+.user-table{
+font-size:14px;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>📊 Admin Dashboard</h1>
+
+<a href="logout"
+class="logout">
+
+Logout
+
+</a>
+
+</div>
+
+<div class="dashboard">
+
+<div class="card">
+
+<h2>Total Users</h2>
+
+<div class="value">
+
+<%=request.getAttribute("totalUsers")%>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Total Orders</h2>
+
+<div class="value">
+
+<%=request.getAttribute("totalOrders")%>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Total Restaurants</h2>
+
+<div class="value">
+
+<%=request.getAttribute("totalRestaurants")%>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Total Revenue</h2>
+
+<div class="value">
+
+₹<%=request.getAttribute("totalRevenue")%>
+
+</div>
+
+</div>
+
+</div>
+
+<h2 class="section-title">
+
+👥 Registered Users
+
+</h2>
+
+<table class="user-table">
+
+<tr>
+
+<th>User ID</th>
+<th>Username</th>
+<th>Email</th>
+<th>Role</th>
+
+</tr>
+
+<%
+
+List<User> users =
+(List<User>)
+request.getAttribute("users");
+
+if(users != null){
+
+for(User user : users){
+
+%>
+
+<tr>
+
+<td>
+<%=user.getUserId()%>
+</td>
+
+<td>
+<%=user.getUsername()%>
+</td>
+
+<td>
+<%=user.getEmail()%>
+</td>
+
+<td>
+<%=user.getRole()%>
+</td>
+
+</tr>
+
+<%
+}
+}
+%>
+
+</table>
+
+<div class="actions">
+
+<a href="adminOrders"
+class="btn">
+
+🚚 Manage Orders
+
+</a>
+
+<a href="restaurants"
+class="btn">
+
+🌐 View Website
+
+</a>
+
+</div>
+
+</body>
+
+</html>
