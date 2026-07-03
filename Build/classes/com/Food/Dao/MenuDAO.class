@@ -1,0 +1,8 @@
+Êþº¾   =    com/food/dao/MenuDAO   java/lang/Object 
+addMenuItem (Lcom/food/model/Menu;)Z 
+getMenuById (I)Lcom/food/model/Menu; getMenuByRestaurant (I)Ljava/util/List; 	Signature *(I)Ljava/util/List<Lcom/food/model/Menu;>; getAllMenuItems ()Ljava/util/List; )()Ljava/util/List<Lcom/food/model/Menu;>; updateMenuItem deleteMenuItem (I)Z 
+SourceFile MenuDAO.java                 	 
+  
+     
+   
+                  
