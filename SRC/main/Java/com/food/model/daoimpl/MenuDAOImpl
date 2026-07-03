@@ -1,0 +1,293 @@
+package com.food.daoimpl;
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.food.dao.MenuDAO;
+import com.food.model.Menu;
+import com.food.util.DBConnection;
+
+public class MenuDAOImpl implements MenuDAO {
+
+    private Connection con;
+
+    public MenuDAOImpl() {
+        con = DBConnection.getConnection();
+    }
+
+    // ADD MENU ITEM
+
+    @Override
+    public boolean addMenuItem(Menu menu) {
+
+        String sql =
+                "INSERT INTO Menu " +
+                "(RestaurantID, ItemName, Description, Price, IsAvailable, ImagePath) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try {
+
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+
+            pstmt.setInt(1,
+                    menu.getRestaurantId());
+
+            pstmt.setString(2,
+                    menu.getItemName());
+
+            pstmt.setString(3,
+                    menu.getDescription());
+
+            pstmt.setDouble(4,
+                    menu.getPrice());
+
+            pstmt.setBoolean(5,
+                    menu.isAvailable());
+
+            pstmt.setString(6,
+                    menu.getImagePath());
+
+            int rows =
+                    pstmt.executeUpdate();
+
+            return rows > 0;
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // GET MENU BY ID
+
+    @Override
+    public Menu getMenuById(int menuId) {
+
+        Menu menu = null;
+
+        String sql =
+                "SELECT * FROM Menu " +
+                "WHERE MenuID=?";
+
+        try {
+
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+
+            pstmt.setInt(1,
+                    menuId);
+
+            ResultSet rs =
+                    pstmt.executeQuery();
+
+            if(rs.next()) {
+
+                menu =
+                        extractMenu(rs);
+            }
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return menu;
+    }
+
+    // GET MENU BY RESTAURANT
+
+    @Override
+    public List<Menu> getMenuByRestaurant(
+            int restaurantId) {
+
+        List<Menu> menuList =
+                new ArrayList<>();
+
+        String sql =
+                "SELECT * FROM Menu " +
+                "WHERE RestaurantID=?";
+
+        try {
+
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+
+            pstmt.setInt(1,
+                    restaurantId);
+
+            ResultSet rs =
+                    pstmt.executeQuery();
+
+            while(rs.next()) {
+
+                menuList.add(
+                        extractMenu(rs));
+            }
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return menuList;
+    }
+
+    // GET ALL MENU ITEMS
+
+    @Override
+    public List<Menu> getAllMenuItems() {
+
+        List<Menu> menuList =
+                new ArrayList<>();
+
+        String sql =
+                "SELECT * FROM Menu";
+
+        try {
+
+            Statement stmt =
+                    con.createStatement();
+
+            ResultSet rs =
+                    stmt.executeQuery(sql);
+
+            while(rs.next()) {
+
+                menuList.add(
+                        extractMenu(rs));
+            }
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return menuList;
+    }
+
+    // UPDATE MENU ITEM
+
+    @Override
+    public boolean updateMenuItem(Menu menu) {
+
+        String sql =
+                "UPDATE Menu SET " +
+                "RestaurantID=?, " +
+                "ItemName=?, " +
+                "Description=?, " +
+                "Price=?, " +
+                "IsAvailable=?, " +
+                "ImagePath=? " +
+                "WHERE MenuID=?";
+
+        try {
+
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+
+            pstmt.setInt(1,
+                    menu.getRestaurantId());
+
+            pstmt.setString(2,
+                    menu.getItemName());
+
+            pstmt.setString(3,
+                    menu.getDescription());
+
+            pstmt.setDouble(4,
+                    menu.getPrice());
+
+            pstmt.setBoolean(5,
+                    menu.isAvailable());
+
+            pstmt.setString(6,
+                    menu.getImagePath());
+
+            pstmt.setInt(7,
+                    menu.getMenuId());
+
+            int rows =
+                    pstmt.executeUpdate();
+
+            return rows > 0;
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // DELETE MENU ITEM
+
+    @Override
+    public boolean deleteMenuItem(int menuId) {
+
+        String sql =
+                "DELETE FROM Menu " +
+                "WHERE MenuID=?";
+
+        try {
+
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+
+            pstmt.setInt(1,
+                    menuId);
+
+            int rows =
+                    pstmt.executeUpdate();
+
+            return rows > 0;
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // COMMON METHOD
+
+    private Menu extractMenu(
+            ResultSet rs)
+            throws SQLException {
+
+        Menu menu =
+                new Menu();
+
+        menu.setMenuId(
+                rs.getInt("MenuID"));
+
+        menu.setRestaurantId(
+                rs.getInt("RestaurantID"));
+
+        menu.setItemName(
+                rs.getString("ItemName"));
+
+        menu.setDescription(
+                rs.getString("Description"));
+
+        menu.setPrice(
+                rs.getDouble("Price"));
+
+        menu.setAvailable(
+                rs.getBoolean("IsAvailable"));
+
+        menu.setImagePath(
+                rs.getString("ImagePath"));
+
+        return menu;
+    }
+}
